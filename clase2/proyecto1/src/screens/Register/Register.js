@@ -1,57 +1,134 @@
-import React, { Component } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, { Component } from "react";
+import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
+import {auth} from '../../firebase/config'
 
 class Register extends Component {
-    constructor(props){
-        super(props); 
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      username: "",
+      password: "",
+      error: ""
+    };
+  }
+
+  onSubmit() {
+    auth
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then(response => {
+        this.setState({ registered: true });
+        console.log("Usuario registrado con éxito", response);
+        this.props.navigation.navigate("Login");
+      })
+      .catch(error => {
+        this.setState({ error: "Fallo en el registro" });
+        console.log("this.state");
+      });
+  }
+ 
+
   render() {
     return (
-        <View style={styles.container}>
-        <View style={styles.card}>
-        <Text style={styles.title}>Registro</Text>
-        <Pressable style={styles.button}
-            onPress={ () => this.props.navigation.navigate("Login")}>
-                <Text style={styles.buttonText}>Ya Tengo Cuenta</Text>
+      <View style={styles.container}>
+        <Text style={styles.title}>Crear cuenta</Text>
+
+
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          keyboardType="email-address"
+          onChangeText={(text) => this.setState({ email: text })}
+          value={this.state.email}
+        />
+
+
+        <TextInput
+          style={styles.input}
+          placeholder="Nombre de usuario"
+          onChangeText={(text) => this.setState({ username: text })}
+          value={this.state.username}
+        />
+
+
+        <TextInput
+          style={styles.input}
+          placeholder="Contraseña"
+          secureTextEntry={true}
+          onChangeText={(text) => this.setState({ password: text })}
+          value={this.state.password}
+        />
+
+
+<Pressable style={styles.button} onPress={() => this.onSubmit(this.state.email, this.state.password)} >
+          <Text style={styles.buttonText}>Registrate</Text>
         </Pressable>
-</View>
-</View>
+
+
+        <Pressable style={styles.button} onPress={() => this.props.navigation.navigate("Login")} >
+          <Text style={styles.buttonText}>Ya tengo cuenta</Text>
+        </Pressable>
+
+
+
+        <View style={styles.dataPreview}>
+          <Text style={styles.previewTitle}>Vista previa de datos:</Text>
+          <Text>Email: {this.state.email}</Text>
+          <Text>Username: {this.state.username}</Text>
+          <Text>Password: {this.state.password}</Text>
+        </View>
+      </View>
     );
   }
 }
+
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#f2f2f2',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-    },
-    card: {
-      backgroundColor: '#fff',
-      borderRadius: 12,
-      padding: 25,
-      width: '100%',
-      maxWidth: 350,
+      backgroundColor: "#f2f2f2",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 20,
     },
     title: {
-      fontSize: 26,
-      fontWeight: '700',
-      marginBottom: 10,
-      color: '#000',
-      textAlign: 'center',
+      fontSize: 28,
+      fontWeight: "bold",
+      color: "#333",
+      marginBottom: 30,
+    },
+    input: {
+      width: "100%",
+      backgroundColor: "#fff",
+      borderRadius: 8,
+      padding: 10,
+      fontSize: 16,
+      marginBottom: 15,
+      borderWidth: 1,
+      borderColor: "#ccc",
     },
     button: {
-      backgroundColor: '#4da6ff',
-      paddingVertical: 14,
-      borderRadius: 8,
-      alignItems: 'center',
+      backgroundColor: "#2e92fd",
+      paddingVertical: 12,
+      paddingHorizontal: 25,
+      borderRadius: 10,
+      marginTop: 10,
     },
     buttonText: {
-      color: '#fff',
+      color: "#fff",
       fontSize: 16,
-      fontWeight: '600',
+      fontWeight: "bold",
+    },
+    dataPreview: {
+      marginTop: 40,
+      backgroundColor: "#fff",
+      padding: 15,
+      borderRadius: 8,
+      width: "100%",
+    },
+    previewTitle: {
+      fontWeight: "bold",
+      marginBottom: 10,
     },
   });
-
-export default Register;
+  
+  export default Register;

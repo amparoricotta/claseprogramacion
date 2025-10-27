@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import DynamicForm from '../../components/DynamicForm';
 
 class Home extends Component {
     constructor(props){
@@ -10,11 +11,8 @@ class Home extends Component {
         <View style={styles.container}>
         <View style={styles.card}>
         <Text style={styles.title}>Bienvenida/o</Text>
-        <Pressable style={styles.button}
-                    onPress={ () => this.props.navigation.navigate("Profile")}>
-                        <Text style={styles.buttonText}>Ir a mi perfil</Text>
-                </Pressable>
       </View>
+      <DynamicForm />
       </View>
     );
   }
